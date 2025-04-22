@@ -1,3 +1,4 @@
+import { jwtDecode }  from 'jwt-decode'
 import { useState } from "react";
 import axios from "axios";
 
@@ -22,6 +23,8 @@ function Login() {
         localStorage.clear();
         localStorage.setItem('access_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
+        const tokenObj = jwtDecode(data.access)
+        localStorage.setItem('uid', tokenObj['user_id'])
         axios.defaults.headers.common['Authorization'] = `Bearer ${data['access']}`;
         window.location.href = '/'
     }
