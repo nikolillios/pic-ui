@@ -16,6 +16,7 @@ const ImageCropper = ({ closeModal, uploadImageUrl }) => {
   const [imgSrc, setImgSrc] = useState("");
   const [crop, setCrop] = useState();
   const [error, setError] = useState("");
+  const [cropSelected, setCropSelected] = useState(false);
 
   const onSelectFile = (e) => {
     const file = e.target.files?.[0];
@@ -30,11 +31,8 @@ const ImageCropper = ({ closeModal, uploadImageUrl }) => {
       imageElement.addEventListener("load", (e) => {
         if (error) setError("");
         const { naturalWidth, naturalHeight } = e.currentTarget;
-        console.log("DIMENSIONS")
-        console.log(naturalHeight)
-        console.log(naturalWidth)
         if (naturalWidth < CROP_WIDTH || naturalHeight < CROP_HEIGHT) {
-          setError("Image must be at least 150 x 150 pixels.");
+          setError("Image must be at least 480 x 800 pixels.");
           return setImgSrc("");
         }
       });
@@ -43,11 +41,19 @@ const ImageCropper = ({ closeModal, uploadImageUrl }) => {
     reader.readAsDataURL(file);
   };
 
+  const onUploadCrop = () => {
+    const dataUrl = previewCanvasRef.current.toDataURL();
+    uploadImageUrl(dataUrl);
+    console.log("called uploadImageUrl")
+    closeModal();
+  }
+
   const onImageLoad = (e) => {
     const { naturalWidth, width, height } = e.currentTarget;
     const cropWidthInPercent = (CROP_WIDTH / naturalWidth) * 100;
     console.log("cro pwidths")
     console.log(naturalWidth)
+    console.log(width)
 
     const crop = makeAspectCrop(
       {
@@ -104,8 +110,7 @@ const ImageCropper = ({ closeModal, uploadImageUrl }) => {
                   imgRef.current.height
                 )
               );
-              const dataUrl = previewCanvasRef.current.toDataURL();
-              uploadImageUrl(dataUrl);
+              setCropSelected(true);
             }}
           >
             Crop Image
@@ -113,17 +118,21 @@ const ImageCropper = ({ closeModal, uploadImageUrl }) => {
         </div>
       )}
       {crop && (
-        <canvas
-          ref={previewCanvasRef}
-          className="mt-4"
-          style={{
-            // display: "none",
-            border: "1px solid black",
-            objectFit: "contain",
-            width: 400,
-            height: 240,
-          }}
-        />
+        <>
+            <label>Preview</label>
+            <canvas
+            ref={previewCanvasRef}
+            className="mt-4"
+            style={{
+                // display: "none",
+                border: "1px solid black",
+                objectFit: "contain",
+                width: 400,
+                height: 240,
+            }}
+            />
+            <button disabled={!cropSelected} onClick={onUploadCrop}>Upload Image to Library</button>
+        </>
       )}
     </>
   );

@@ -2,18 +2,19 @@ import './App.css';
 import 'react-image-crop/dist/ReactCrop.css'
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Login from "./components/Login";
+import Logout from './components/Logout';
 import Home from "./components/Home";
 import Navigation from './components/navigation';
-import Logout from './components/Logout';
+
 function App() {
-    return <BrowserRouter>
-    <Navigation></Navigation>
+    return  <BrowserRouter>
+        <Navigation></Navigation>
         <Routes>
             <Route path="/" element={<Home/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/logout" element={<Logout/>}/>
         </Routes>
-    </BrowserRouter>;
+    </BrowserRouter>
 }
 
 export default App;

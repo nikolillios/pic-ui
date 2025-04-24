@@ -4,48 +4,34 @@ import {Navigate} from "react-router-dom";
 import ImageCropper from "./ImageCropper";
 import Modal from "./Modal";
 
+const API_URL = 'http://127.0.0.1:8000/'
+
 const Home = () => {
-  const imageUrl = useRef(
-    "https://avatarfiles.alphacoders.com/161/161002.jpg"
-  );
-  const [modalOpen, setModalOpen] = useState(false);
+    const imageUrl = useRef(
+        "https://avatarfiles.alphacoders.com/161/161002.jpg"
+    );
+    const [modalOpen, setModalOpen] = useState(false);
 
-  const uploadImageUrl = (imgSrc) => {
-    console.log("uploading image")
-    console.log(imgSrc)
-    imageUrl.current = imgSrc;
-  };
-    const [imageFile, setImageFile] = useState('');
-
-    useEffect(() => {
-        if(localStorage.getItem('access_token') === null){
-            window.location.href = '/login'  
+    const uploadImageUrl = async (dataUrl) => {
+        console.log("uploading image")
+        imageUrl.current = dataUrl;
+        console.log(dataUrl)
+        const body = {
+            image: dataUrl
         }
-        // else{
-        //     (async () => {
-        //     try {
-        //         const {data} = await axios.get('http://localhost:8000/home/', {
-        //         headers: {
-        //           'Content-Type': 'application/json',
-        //         }
-        //       });
-
-        //       setMessage(data.message);
-        //     } catch (e) {
-        //         console.log('not auth')
-        //     }
-        // })()};
-    }, []);
-
-    const handleImageChange = (e) => {
-        if (e.target.files) {
-            setImageFile(e.target.files[0])
-        }
-    }
+        await axios.post(
+            API_URL + 'images/uploadImageFile/', body
+        ).then((res) => {
+            print("Upload res")
+            // console.log(res)
+        }).catch((e) => {
+            console.log(e)
+        });
+    };
 
     return (
         <div className="flex flex-col items-center pt-12">
-          <div className="relative">
+            <div className="relative">
             <h3>Hi {localStorage.getItem('uid')}</h3>
             <button
                 // className="absolute -bottom-3 left-0 right-0 m-auto w-fit p-[.35rem] rounded-full bg-gray-800 hover:bg-gray-700 border border-gray-600"
@@ -53,13 +39,13 @@ const Home = () => {
                 onClick={() => setModalOpen(true)}>
                 Upload Image
             </button>
-          </div>
+            </div>
             {modalOpen && (
                 <Modal callback={uploadImageUrl}
-                       closeModal={() => setModalOpen(false)}/>
+                        closeModal={() => setModalOpen(false)}/>
             )}
-          <img src={imageUrl.current}/>
-          <label>{}</label>
+            <img src={imageUrl.current} width="400"/>
+            <label>{}</label>
         </div>
     )
 }
