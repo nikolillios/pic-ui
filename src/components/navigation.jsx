@@ -13,12 +13,12 @@ export function Navigation() {
 
   return (
     <div>
-    <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="/">Picturesque</Navbar.Brand>
+    <Navbar className="flex flex-row" bg="dark" variant="dark">
+          <Navbar.Brand className="pr-10" href="/">Picturesque</Navbar.Brand>
           <Nav className="me-auto">
           {isAuth ?
-            <Nav.Link href="/">Home</Nav.Link>
-            : null}
+            <Nav.Link href="/">Home</Nav.Link> :
+            <Nav.Link href="/login">Login</Nav.Link>}
           </Nav>
           <Nav>
           {isAuth ?
