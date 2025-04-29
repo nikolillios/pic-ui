@@ -23,3 +23,11 @@ axios.interceptors.response.use(resp => resp, async error => {
   refresh = false;
   return error;
 });
+
+const accessToken = localStorage.getItem("access_token")
+axios.defaults.headers.common['Authorization'] = `Bearer: ${accessToken}`
+
+axios.interceptors.request.use(config => {
+  config.headers.Authorization = `Bearer ${localStorage.getItem("access_token")}`
+  return config
+});
