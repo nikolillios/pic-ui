@@ -41,7 +41,8 @@ const Home = () => {
         await axios.post(
             API_URL + 'images/uploadImageFile/', body
         ).then((res) => {
-            print("Upload res")
+            console.log("Upload res")
+            fetchImages()
             // console.log(res)
         }).catch((e) => {
             console.log(e)
@@ -67,12 +68,13 @@ const Home = () => {
                 {/* <img src={imageUrl.current} width="400"/> */}
             </div>
             <label>Image Library</label>
-            <div className="flex flex-row flex-wrap pt-5">{images.map(image => 
+            <div className="flex flex-row flex-wrap pt-5">{
+                images ? images.map(image => 
                     <div key={image.image}>
                         {/* <div>{image}</div> */}
                         <img width="200" src={image.image}></img>
                     </div>
-                )}
+                ) : <></>}
             </div>
         </div>
     )
