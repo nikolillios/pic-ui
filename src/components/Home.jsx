@@ -8,11 +8,9 @@ import CreateCollection from "./CreateCollection";
 const API_URL = 'http://127.0.0.1:8000/'
 
 const Home = () => {
-    const imageUrl = useRef(
-        "https://avatarfiles.alphacoders.com/161/161002.jpg"
-    );
     const [modalOpen, setModalOpen] = useState(false);
     const [images, setImages] = useState([]);
+    const [collections, setCollections] = useState([])
 
     const fetchImages = async () => {
         await axios.get(API_URL + 'images/getImagesByUser')
@@ -81,7 +79,6 @@ const Home = () => {
                     <Modal callback={uploadImageUrl}
                             closeModal={() => setModalOpen(false)}/>
                 )}
-                {/* <img src={imageUrl.current} width="400"/> */}
             </div>
             <button>Create Collection</button>
             <CreateCollection createCollection={createCollection}/>
@@ -90,7 +87,6 @@ const Home = () => {
             <div className="flex flex-row flex-wrap pt-5">{
                 images ? images.map(image => 
                     <div key={image.image}>
-                        {/* <div>{image}</div> */}
                         <img width="200" src={image.image}></img>
                     </div>
                 ) : <></>}
