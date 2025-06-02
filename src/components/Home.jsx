@@ -3,6 +3,7 @@ import axios from "axios";
 import {Navigate} from "react-router-dom";
 import ImageCropper from "./ImageCropper";
 import Modal from "./Modal";
+import CreateCollection from "./CreateCollection";
 
 const API_URL = 'http://127.0.0.1:8000/'
 
@@ -48,6 +49,21 @@ const Home = () => {
             console.log(e)
         });
     };
+    const createCollection = (name, device) => {
+        console.log(name)
+        console.log(device)
+        const body = {
+            "collection_name": name,
+            "model": device,
+        }
+        axios.post(
+            API_URL + 'images/createCollection', body
+        ).then((res) => {
+            console.log("created collection")
+        }).catch((e) => {
+            console.log("Error: %s", e)
+        })
+    }
 
     return (
         <div>
@@ -67,6 +83,9 @@ const Home = () => {
                 )}
                 {/* <img src={imageUrl.current} width="400"/> */}
             </div>
+            <button>Create Collection</button>
+            <CreateCollection createCollection={createCollection}/>
+            <button>Select Collection</button><br/>
             <label>Image Library</label>
             <div className="flex flex-row flex-wrap pt-5">{
                 images ? images.map(image => 
