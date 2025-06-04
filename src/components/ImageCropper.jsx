@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import ReactCrop, {
   centerCrop,
   convertToPixelCrop,
@@ -10,13 +10,18 @@ const CROP_HEIGHT = 480;
 const CROP_WIDTH = 800;
 const ASPECT_RATIO = CROP_WIDTH/CROP_HEIGHT;
 
-const ImageCropper = ({ closeModal, uploadImageUrl }) => {
+const ImageCropper = ({ closeModal, uploadImageUrl, cropDims }) => {
   const imgRef = useRef(null);
   const previewCanvasRef = useRef(null);
   const [imgSrc, setImgSrc] = useState("");
   const [crop, setCrop] = useState();
   const [error, setError] = useState("");
   const [cropSelected, setCropSelected] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState();
+
+  useEffect(() => {
+    setAspectRatio(cropDims[0]/cropDims[1])
+  }, [cropDims])
 
   const onSelectFile = (e) => {
     const file = e.target.files?.[0];
@@ -31,9 +36,9 @@ const ImageCropper = ({ closeModal, uploadImageUrl }) => {
       imageElement.addEventListener("load", (e) => {
         if (error) setError("");
         const { naturalWidth, naturalHeight } = e.currentTarget;
-        if (naturalWidth < CROP_WIDTH || naturalHeight < CROP_HEIGHT) {
-          setError("Image must be at least 480 x 800 pixels.");
-          return setImgSrc("");
+        if (naturalHeight < cropDims[0] || naturalWidth < cropDims[1]) {
+          setError(`Image must be at least ${cropDims[0]} by ${cropDims[1]} pixels`)
+          return setImgSrc("")
         }
       });
       setImgSrc(imageUrl);
@@ -49,8 +54,8 @@ const ImageCropper = ({ closeModal, uploadImageUrl }) => {
   }
 
   const onImageLoad = (e) => {
-    const { naturalWidth, width, height } = e.currentTarget;
-    const cropWidthInPercent = (CROP_WIDTH / naturalWidth) * 100;
+    const { naturalWidth, naturalHeight, width, height } = e.currentTarget;
+    const cropWidthInPercent = (cropDims[0] / naturalWidth) * 100;
     console.log("cro pwidths")
     console.log(naturalWidth)
     console.log(width)
@@ -60,7 +65,7 @@ const ImageCropper = ({ closeModal, uploadImageUrl }) => {
         unit: "%",
         width: cropWidthInPercent,
       },
-      ASPECT_RATIO,
+      aspectRatio,
       width,
       height
     );
@@ -86,9 +91,7 @@ const ImageCropper = ({ closeModal, uploadImageUrl }) => {
             crop={crop}
             onChange={(pixelCrop, percentCrop) => setCrop(percentCrop)}
             keepSelection
-            aspect={ASPECT_RATIO}
-            minWidth={CROP_WIDTH}
-            locked={true}
+            aspect={aspectRatio}
           >
             <img
               ref={imgRef}

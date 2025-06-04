@@ -1,6 +1,6 @@
 import ImageCropper from "./ImageCropper";
 
-const Modal = ({ callback, closeModal }) => {
+const Modal = ({ callback, closeModal, cropDims }) => {
   return (
     <div
       className="relative z-10"
@@ -24,6 +24,7 @@ const Modal = ({ callback, closeModal }) => {
               <ImageCropper
                 uploadImageUrl={callback}
                 closeModal={closeModal}
+                cropDims={cropDims}
               />
             </div>
           </div>
