@@ -63,6 +63,7 @@ const Home = () => {
             API_URL + 'images/uploadImageToCollection/', body
         ).then((res) => {
             fetchImages()
+            fetchCollections()
         }).catch((e) => {
             console.log(e)
         });
