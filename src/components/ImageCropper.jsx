@@ -36,10 +36,6 @@ const ImageCropper = ({ closeModal, uploadImageUrl, cropDims }) => {
       imageElement.addEventListener("load", (e) => {
         if (error) setError("");
         const { naturalWidth, naturalHeight } = e.currentTarget;
-        if (naturalHeight < cropDims[0] || naturalWidth < cropDims[1]) {
-          setError(`Image must be at least ${cropDims[0]} by ${cropDims[1]} pixels`)
-          return setImgSrc("")
-        }
       });
       setImgSrc(imageUrl);
     });
