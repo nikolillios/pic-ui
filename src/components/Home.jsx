@@ -42,9 +42,6 @@ const Home = () => {
                     newColls[collection.id] = collection
                 }
                 setCollections(newColls)
-                console.log("new collections")
-                console.log(newColls)
-                setCurrCollection(0)
             })
     }
 
@@ -57,20 +54,6 @@ const Home = () => {
         }
     }, [])
 
-    const uploadImageUrl = async (dataUrl) => {
-        const body = {
-            image: dataUrl
-        }
-        await axios.post(
-            API_URL + 'images/uploadImageFile/', body
-        ).then((res) => {
-            console.log("Upload res")
-            fetchImages()
-            // console.log(res)
-        }).catch((e) => {
-            console.log(e)
-        });
-    };
     const uploadImageToCollection = async (dataUrl) => {
         const body = {
             image_url: dataUrl,
@@ -79,13 +62,12 @@ const Home = () => {
         await axios.post(
             API_URL + 'images/uploadImageToCollection/', body
         ).then((res) => {
-            console.log("Upload res")
             fetchImages()
-            // console.log(res)
         }).catch((e) => {
             console.log(e)
         });
     };
+
     const createCollection = (name, device) => {
         console.log(name)
         console.log(device)
@@ -106,7 +88,6 @@ const Home = () => {
         setCurrCollection(curr.id)
         setCropDims(MODEL_TO_ASPECT[collections[curr.id].device_model])
     }
-
 
     return (
         <div>
