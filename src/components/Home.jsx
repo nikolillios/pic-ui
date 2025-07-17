@@ -78,15 +78,27 @@ const Home = () => {
         axios.post(
             API_URL + 'images/createCollection', body
         ).then((res) => {
+            addCollection(res.data.id, res.data)
+            selectCollection(res.data.id)
             console.log("created collection")
         }).catch((e) => {
             console.log("Error: %s", e)
         })
     }
+
+    const addCollection = (id, collection) => {
+        const newColls = collections
+        newColls[id] = collection
+        setCollections(newColls)
+    }
+
+    const selectCollection = (id) => {
+        setCurrCollection(id)
+        setCropDims(MODEL_TO_ASPECT[collections[id].device_model])
+    }
     const collectionSelected = (e) => {
         const curr = collections[e.target.value]
-        setCurrCollection(curr.id)
-        setCropDims(MODEL_TO_ASPECT[collections[curr.id].device_model])
+        selectCollection(curr.id)
     }
 
     return (
