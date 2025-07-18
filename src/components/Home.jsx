@@ -19,6 +19,7 @@ const Home = () => {
     const [collections, setCollections] = useState()
     const [currCollection, setCurrCollection] = useState(0)
     const [cropDims, setCropDims] = useState()
+    const [selectedImage, setSelectedImage]  = useState()
 
     const fetchImages = async () => {
         await axios.get(API_URL + 'images/getImagesByUser')
@@ -49,10 +50,14 @@ const Home = () => {
         if (localStorage.getItem('access_token') === null) {                   
             window.location.href = '/login'
         } else {
-            fetchImages()
-            fetchCollections()
+            reloadImages()
         }
     }, [])
+
+    const reloadImages = () => {
+        fetchImages()
+        fetchCollections()
+    }
 
     const uploadImageToCollection = async (dataUrl) => {
         const body = {
@@ -62,8 +67,7 @@ const Home = () => {
         await axios.post(
             API_URL + 'images/uploadImageToCollection/', body
         ).then((res) => {
-            fetchImages()
-            fetchCollections()
+            reloadImages()
         }).catch((e) => {
             console.log(e)
         });
@@ -87,6 +91,18 @@ const Home = () => {
         })
     }
 
+    const deleteImage = () => {
+        axios.delete(
+            API_URL + 'images/deleteImage/' + selectedImage
+        ).then((res) => {
+            console.log(`Deleted image: ${selectedImage}`)
+            setSelectedImage(null)
+            reloadImages()
+        }).catch((e) => {
+            console.log("Error: %s", e)
+        })
+    }
+
     const addCollection = (id, collection) => {
         const newColls = collections
         newColls[id] = collection
@@ -100,6 +116,11 @@ const Home = () => {
     const collectionSelected = (e) => {
         const curr = collections[e.target.value]
         selectCollection(curr.id)
+    }
+
+    const onSelectImage = (id) => {
+        console.log(`Selecting: ${id}`)
+        setSelectedImage(id)
     }
 
     return (
@@ -117,11 +138,16 @@ const Home = () => {
                 </select>) : <></>}
             <br/>
             {currCollection ? 
-            <label>{collections[currCollection].name}</label>: <></>}
+            <label>{collections[currCollection].name}</label>: <></>}<br/>
+            {selectedImage ? <button onClick={deleteImage}>Delete Image</button> : <></>}
             <div className="flex flex-row flex-wrap pt-5">{
                 currCollection ? collections[currCollection].images.map(id => 
-                    <div key={id}>
-                        <img width="200" src={images[id]}></img>
+                    <div key={id} onClick={() => onSelectImage(id)}>
+                        <img width="200" src={images[id]}
+                            className={id === selectedImage ? 
+                                       "border-sky-500 border-2 border-solid"
+                                       : ""}>
+                        </img>
                     </div>
                 ) : <></>}
             </div>
