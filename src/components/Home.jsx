@@ -4,10 +4,11 @@ import {Navigate} from "react-router-dom";
 import ImageCropper from "./ImageCropper";
 import Modal from "./Modal";
 import CreateCollection from "./CreateCollection";
+import DeviceConfigPanel from "./DeviceConfigPanel";
 
 const API_URL = 'http://127.0.0.1:8000/'
 
-const MODEL_TO_ASPECT = {
+export const MODEL_TO_ASPECT = {
     1: [600, 400],
     2: [800, 480],
     3: [1600, 1200],
@@ -19,14 +20,14 @@ const Home = () => {
     const [collections, setCollections] = useState()
     const [currCollection, setCurrCollection] = useState(0)
     const [cropDims, setCropDims] = useState()
-    const [selectedImage, setSelectedImage]  = useState()
+    const [selectedImage, setSelectedImage] = useState()
+    const [deviceConfigs, setDeviceConfigs] = useState({})
 
     const fetchImages = async () => {
         await axios.get(API_URL + 'images/getImagesByUser')
             .then((res) => {
                 const imObj = {}
                 for (const img of res.data) {
-                    console.log(img)
                     imObj[img.id] = img.image
                 }
                 setImages(imObj)
@@ -51,12 +52,13 @@ const Home = () => {
             window.location.href = '/login'
         } else {
             reloadImages()
+            getDeviceConfigs()
         }
     }, [])
 
-    const reloadImages = () => {
-        fetchImages()
-        fetchCollections()
+    const reloadImages = async () => {
+        await fetchImages()
+        await fetchCollections()
     }
 
     const uploadImageToCollection = async (dataUrl) => {
@@ -67,8 +69,12 @@ const Home = () => {
         await axios.post(
             API_URL + 'images/uploadImageToCollection/', body
         ).then((res) => {
+            console.log("Successfully uploaded image")
+            console.log(res.data)
+            //TODO: instantly update images
             reloadImages()
         }).catch((e) => {
+            console.log("Exception when trying to upload image")
             console.log(e)
         });
     };
@@ -103,6 +109,44 @@ const Home = () => {
         })
     }
 
+    const getDeviceConfigs = () => {
+        axios.get(
+            API_URL + 'images/getDeviceConfigs'
+        ).then((res) => {
+            const newConfigs = {}
+            console.log("New configs")
+            console.log(res.data)
+            for (const config of res.data){
+                newConfigs[config["id"]] = config
+            }
+            console.log("new configs")
+            console.log(newConfigs)
+            setDeviceConfigs(newConfigs)
+        }).catch((e) => {
+            console.log("Error: %s", e)
+        })
+    }
+
+    const modifyConfig = (newCollection, editConfig) => {
+        const body = {
+            "config_id": editConfig,
+            "collection_id": newCollection,
+        }
+        console.log(body)
+        axios.post(
+            API_URL + 'images/updateDeviceConfig/', body
+        ).then((res) => {
+            if (!res.data) {
+                console.log("No updated config returned")
+            }
+            const newConfigs = {...deviceConfigs}
+            newConfigs[res.data["id"]] = res.data
+            setDeviceConfigs(newConfigs)
+        }).catch((e) => {
+            console.log("Error: %s", e)
+        })
+    }
+
     const addCollection = (id, collection) => {
         const newColls = collections
         newColls[id] = collection
@@ -125,7 +169,7 @@ const Home = () => {
 
     return (
         <div>
-            <h3>Hi {localStorage.getItem('uid')}</h3>
+            <h3 className="mb-10">Hi, {localStorage.getItem('uid')}</h3>
             <label>Create Collection</label>
             <CreateCollection createCollection={createCollection}/>
             <label>Select Collection</label><br/>
@@ -167,6 +211,11 @@ const Home = () => {
                             closeModal={() => setModalOpen(false)}/>
                 )}
             </div>
+            <label>DEVICE CONFIGS</label>
+            <DeviceConfigPanel configs={deviceConfigs}
+                collections={collections}
+                modifyConfig={modifyConfig}>
+            </DeviceConfigPanel>
             <label>Image Library</label>
             <div className="flex flex-row flex-wrap pt-5">{
                 images ? Object.keys(images).map(id => 

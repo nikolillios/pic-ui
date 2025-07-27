@@ -38,7 +38,7 @@ const CreateCollection = ({createCollection}) => {
     return (
         <form action={submitCollection}>
             <label>Name</label>
-            <input type="text" value={(name)} onChange={nameChanged}></input>
+            <input type="text" value={(name)} onChange={nameChanged}></input><br/>
             <label>Device Model</label>
             <select onChange={deviceChanged} value={device}>
                 <option key={-1} value={-1}>Select Device</option>
