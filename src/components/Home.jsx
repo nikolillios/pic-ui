@@ -197,7 +197,7 @@ const Home = () => {
                         </img>
                     </div>
                 ) : <></>}
-                <div>
+                <div className="opacity-20">
                     {tempImgSrc && <img width="200" src={tempImgSrc}></img>}
                 </div>
             </div>
