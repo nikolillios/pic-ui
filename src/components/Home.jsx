@@ -42,6 +42,10 @@ const Home = () => {
         await axios.get(API_URL + 'images/getCollections')
             .then((res) => {
                 const newColls = {}
+                if (!res.data) {
+                    console.log("No collection data available")
+                    return
+                }
                 for (const collection of res.data) {
                     newColls[collection.id] = collection
                 }
