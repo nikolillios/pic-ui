@@ -22,6 +22,7 @@ const Home = () => {
     const [cropDims, setCropDims] = useState()
     const [selectedImage, setSelectedImage] = useState()
     const [deviceConfigs, setDeviceConfigs] = useState({})
+    const [createOpen, setCreateOpen] = useState(false)
 
     const fetchImages = async () => {
         await axios.get(API_URL + 'images/getImagesByUser')
@@ -170,7 +171,11 @@ const Home = () => {
         <div>
             <h3 className="mb-10">Hi, {localStorage.getItem('uid')}</h3>
             <label>Create Collection</label>
-            <CreateCollection createCollection={createCollection}/>
+            <button className="m-5 p-2 w-13 h-10 fs-10" onClick={() => setCreateOpen(!createOpen)}>{!createOpen ? "Open" : "Close"}</button>
+            {createOpen ? (<div>
+                <CreateCollection createCollection={createCollection}/>
+            </div>) : (<div>
+            </div>)}
             <label>Select Collection</label><br/>
             {collections ? (
                 <select value={currCollection} onChange={collectionSelected}>
