@@ -172,65 +172,75 @@ const Home = () => {
 
     return (
         <div>
-            <h3 className="mb-10">Hi, {localStorage.getItem('uid')}</h3>
-            <label>Create Collection</label>
-            <button className="m-5 p-2 w-13 h-10 fs-10" onClick={() => setCreateOpen(!createOpen)}>{!createOpen ? "Open" : "Close"}</button>
-            {createOpen ? (<div>
-                <CreateCollection createCollection={createCollection}/>
-            </div>) : (<div>
-            </div>)}
-            {collections ? (
-                <select value={currCollection} onChange={collectionSelected}>
-                    <option disabled={true} value={0}>Select a Collection</option>
-                    {Object.keys(collections).map((id, i) => 
-                        <option key={i} value={id}>{collections[id].name}</option>
-                    )}
-                </select>) : <></>}
-            <br/>
-            <div className="flex flex-row flex-wrap pt-5">{
-                currCollection ? collections[currCollection].images.map(id => 
-                    <div key={id} onClick={() => onSelectImage(id)}>
-                        <img width="200" src={images[id]}
-                            className={id === selectedImage ? 
-                                       "border-sky-500 border-2 border-solid"
-                                       : ""}>
-                        </img>
-                    </div>
-                ) : <></>}
-                <div className="opacity-20">
-                    {tempImgSrc && <img width="200" src={tempImgSrc}></img>}
+                <h2 className="text-lg">Image Collections</h2>
+            <div className="card flex flex-col mt-20">
+                <div className="flex flex-row h-30">
+                    {collections ? (
+                    <select className="w-40 h-8" value={currCollection} onChange={collectionSelected}>
+                        <option disabled={true} value={0}>Select a Collection</option>
+                        {Object.keys(collections).map((id, i) => 
+                            <option key={i} value={id}>{collections[id].name}</option>
+                        )}
+                    </select>) : <></>}
+                    <button className="ml-2 p-2 w-13 h-10" onClick={() => setCreateOpen(!createOpen)}>{!createOpen ? "Create New" : "Close"}</button>
                 </div>
-            </div>
-            <div className="flex flex-col items-center pt-12 pb-20">
-                <div className="relative">
+                {createOpen ? (
+                <div className="flex justify-start">
+                    <CreateCollection createCollection={createCollection}/>
+                </div>
+                ) : <div></div>}
+                <div className="flex justify-start mt-5">
                     {currCollection ? 
-                    <button
-                        // className="absolute -bottom-3 left-0 right-0 m-auto w-fit p-[.35rem] rounded-full bg-gray-800 hover:bg-gray-700 border border-gray-600"
-                        title="Add photo"
-                        onClick={() => setModalOpen(true)}>
-                        Upload New Image
-                    </button> : <></>}
-                    {selectedImage ? <button onClick={deleteImage}>Delete Image</button> : <></>}
+                        <button
+                            className="w-25 text-xs"
+                            // className="absolute -botto-3 left0 right-0 m-auto w-fit p-[.35rem] rounded-full bg-gray-800 hover:bg-gray-700 border border-gray-600"
+                            title="Add photo"
+                            onClick={() => setModalOpen(true)}>
+                            Upload New Image
+                        </button> : <></>}
                 </div>
-                {modalOpen && (
-                    <Modal callback={uploadImageToCollection}
-                            cropDims={cropDims}
-                            closeModal={() => setModalOpen(false)}/>
-                )}
-            </div>
-            <label>DEVICE CONFIGS</label>
-            <DeviceConfigPanel configs={deviceConfigs}
-                collections={collections}
-                modifyConfig={modifyConfig}
-                setCurrentCollection={setCurrCollection}>
-            </DeviceConfigPanel>
-            <label>Image Library</label>
-            <div className="flex flex-row flex-wrap pt-5">{
-                images ? Object.keys(images).map(id => 
-                    <div key={id}>
-                        <img width="200" src={images[id]}></img>
+                <div className="flex flex-row flex-wrap pt-5">{
+                    currCollection ? collections[currCollection].images.map(id => 
+                        <div key={id} onClick={() => onSelectImage(id)}>
+                            <img width="200" src={images[id]}
+                                className={id === selectedImage ? 
+                                        "border-sky-500 border-2 border-solid"
+                                        : ""}>
+                            </img>
+                        </div>
+                    ) : <></>}
+                    <div className="opacity-20">
+                        {tempImgSrc && <img width="200" src={tempImgSrc}></img>}
                     </div>
-                ) : <></>}
+                </div>
+                <div className="flex flex-row space-x-4 justify-end">
+                    <div className="relative pt-10">
+                        {selectedImage ? <button className="bg-red-500" onClick={deleteImage}>Delete Image</button> : <></>}
+                    </div>
+                    {modalOpen && (
+                        <Modal callback={uploadImageToCollection}
+                                cropDims={cropDims}
+                                closeModal={() => setModalOpen(false)}/>
+                    )}
+                </div>
+            </div>
+            <label className='mb-5'>Device Configurations</label>
+            <div className="card">
+                <DeviceConfigPanel configs={deviceConfigs}
+                    collections={collections}
+                    modifyConfig={modifyConfig}
+                    setCurrentCollection={setCurrCollection}>
+                </DeviceConfigPanel>
+            </div>
+            <label>Image Library</label>
+            <div className="card">
+                <div className="flex flex-row flex-wrap pt-5">{
+                    images ? Object.keys(images).map(id => 
+                        <div key={id}>
+                            <img width="200" src={images[id]}></img>
+                        </div>
+                    ) : <></>}
+            </div>
             </div>
         </div>
     )

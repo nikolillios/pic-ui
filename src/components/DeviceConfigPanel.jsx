@@ -37,15 +37,15 @@ const DeviceConfigPanel = ({configs, collections, modifyConfig, setCurrentCollec
     }
 
     return (
-        <div>
+        <div className='flex flex-col'>
             {configs ? Object.keys(configs).map((id, i) => 
-                <div className="border-blue-500 border-2 flex flex-col" key={i}>
+                <div className="border-grey-500 border-1 border rounded-md flex flex-col p-5 text-left" key={i}>
                     <div>
-                        <label>Device: </label>
+                        <label className='font-bold'>Device: </label>
                         <span>{configs[id].name}</span>
                     </div>
                     <div>
-                        <label>Collection: </label>
+                        <label className='font-bold'>Collection: </label>
                         {editConfig && collections ?
                         <div className='inline-block'>
                             <select value={newCollection} onChange={onCollectionChanged}>{Object.keys(collections).map(
@@ -63,7 +63,7 @@ const DeviceConfigPanel = ({configs, collections, modifyConfig, setCurrentCollec
                         </>}
                     </div>
                     <div>
-                        <label>Dimensions: </label>
+                        <label className='font-bold'>Dimensions: </label>
                         <span>{MODEL_TO_ASPECT[configs[id].device_model].join("x")}</span>
                     </div>
                 </div>

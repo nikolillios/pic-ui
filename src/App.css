@@ -37,6 +37,11 @@
 
 .card {
   padding: 2em;
+  margin: 1em;
+  margin-bottom: 4em;
+  border-color: 2px solid black;
+  border-radius: 15px;
+  background-color: black;
 }
 
 .read-the-docs {

@@ -36,18 +36,18 @@ const CreateCollection = ({createCollection}) => {
         setDevice(-1)
     }
     return (
-        <form action={submitCollection}>
-            <label>Name</label>
-            <input type="text" value={(name)} onChange={nameChanged}></input><br/>
-            <label>Device Model</label>
+        <form action={submitCollection} className="flex flex-col justify-start">
+            <label className="m-2">Name</label>
+            <input type="text" value={(name)} onChange={nameChanged}></input>
+            <label className="m-2">Device Model</label>
             <select onChange={deviceChanged} value={device}>
                 <option key={-1} value={-1}>Select Device</option>
                 {SUPPORTED_EPAPER.map((model, i) => 
                     <option key={i} value={i}>{model}</option>
                 )}
             </select><br/>
-            <label>{error}</label><br/>
-            <button type="submit">Create</button><br/>
+            <label>{error}</label>
+            <button className="text-xs p-2" type="submit">Create</button>
         </form>
     )
 }
