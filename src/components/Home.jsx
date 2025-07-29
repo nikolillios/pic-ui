@@ -118,13 +118,9 @@ const Home = () => {
             API_URL + 'images/getDeviceConfigs'
         ).then((res) => {
             const newConfigs = {}
-            console.log("New configs")
-            console.log(res.data)
             for (const config of res.data){
                 newConfigs[config["id"]] = config
             }
-            console.log("new configs")
-            console.log(newConfigs)
             setDeviceConfigs(newConfigs)
         }).catch((e) => {
             console.log("Error: %s", e)
@@ -180,7 +176,6 @@ const Home = () => {
                 <CreateCollection createCollection={createCollection}/>
             </div>) : (<div>
             </div>)}
-            <label>Select Collection</label><br/>
             {collections ? (
                 <select value={currCollection} onChange={collectionSelected}>
                     <option disabled={true} value={0}>Select a Collection</option>
@@ -189,8 +184,6 @@ const Home = () => {
                     )}
                 </select>) : <></>}
             <br/>
-            {currCollection ? 
-            <label>{collections[currCollection].name}</label>: <></>}<br/>
             {selectedImage ? <button onClick={deleteImage}>Delete Image</button> : <></>}
             <div className="flex flex-row flex-wrap pt-5">{
                 currCollection ? collections[currCollection].images.map(id => 
