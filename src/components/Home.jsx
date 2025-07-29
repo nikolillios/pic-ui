@@ -23,6 +23,7 @@ const Home = () => {
     const [selectedImage, setSelectedImage] = useState()
     const [deviceConfigs, setDeviceConfigs] = useState({})
     const [createOpen, setCreateOpen] = useState(false)
+    const [tempImgSrc, setTempImgSrc] = useState("")
 
     const fetchImages = async () => {
         await axios.get(API_URL + 'images/getImagesByUser')
@@ -57,6 +58,9 @@ const Home = () => {
         }
     }, [])
 
+    useEffect(() => {
+        setTempImgSrc("")
+    }, [images])
     const reloadImages = async () => {
         await fetchImages()
         await fetchCollections()
@@ -67,12 +71,11 @@ const Home = () => {
             image_url: dataUrl,
             collection_id: currCollection
         }
+        setTempImgSrc(dataUrl)
         await axios.post(
             API_URL + 'images/uploadImageToCollection/', body
         ).then((res) => {
             console.log("Successfully uploaded image")
-            console.log(res.data)
-            //TODO: instantly update images
             reloadImages()
         }).catch((e) => {
             console.log("Exception when trying to upload image")
@@ -198,6 +201,9 @@ const Home = () => {
                         </img>
                     </div>
                 ) : <></>}
+                <div>
+                    {tempImgSrc && <img width="200" src={tempImgSrc}></img>}
+                </div>
             </div>
             <div className="flex flex-col items-center pt-12 pb-20">
                 <div className="relative">
