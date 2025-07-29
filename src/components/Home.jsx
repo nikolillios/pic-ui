@@ -132,7 +132,6 @@ const Home = () => {
             "config_id": editConfig,
             "collection_id": newCollection,
         }
-        console.log(body)
         axios.post(
             API_URL + 'images/updateDeviceConfig/', body
         ).then((res) => {
