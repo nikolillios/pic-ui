@@ -1,8 +1,6 @@
 import axios from "axios";
 let refresh = false;
 axios.interceptors.response.use(resp => resp, async error => {
-  console.log("INTERCEPTED BY BUTLER")
-  console.log(error)
   if (error.response.status === 401 && !refresh) {
      refresh = true;
      console.log(localStorage.getItem('refresh_token'))
