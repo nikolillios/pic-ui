@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {MODEL_TO_ASPECT} from "./Home";
 import editIcon from "../assets/white_pencil.png";
 
-const DeviceConfigPanel = ({configs, collections, modifyConfig}) => {
+const DeviceConfigPanel = ({configs, collections, modifyConfig, setCurrentCollection}) => {
 
     const [editConfig, setEditConfig] = useState()
     const [newCollection, setNewCollection] = useState()
@@ -10,6 +10,7 @@ const DeviceConfigPanel = ({configs, collections, modifyConfig}) => {
 
     const onCollectionChanged = (e) => {
         setNewCollection(e.target.value)
+        setCurrentCollection(e.target.value)
     }
     
     const onEditSubmitted = () => {

@@ -163,8 +163,11 @@ const Home = () => {
     }
 
     const onSelectImage = (id) => {
-        console.log(`Selecting: ${id}`)
-        setSelectedImage(id)
+        if (id === selectedImage) {
+            setSelectedImage(null)
+        } else {
+            setSelectedImage(id)
+        }
     }
 
     return (
@@ -184,7 +187,6 @@ const Home = () => {
                     )}
                 </select>) : <></>}
             <br/>
-            {selectedImage ? <button onClick={deleteImage}>Delete Image</button> : <></>}
             <div className="flex flex-row flex-wrap pt-5">{
                 currCollection ? collections[currCollection].images.map(id => 
                     <div key={id} onClick={() => onSelectImage(id)}>
@@ -206,8 +208,9 @@ const Home = () => {
                         // className="absolute -bottom-3 left-0 right-0 m-auto w-fit p-[.35rem] rounded-full bg-gray-800 hover:bg-gray-700 border border-gray-600"
                         title="Add photo"
                         onClick={() => setModalOpen(true)}>
-                        Upload Image
+                        Upload New Image
                     </button> : <></>}
+                    {selectedImage ? <button onClick={deleteImage}>Delete Image</button> : <></>}
                 </div>
                 {modalOpen && (
                     <Modal callback={uploadImageToCollection}
@@ -218,7 +221,8 @@ const Home = () => {
             <label>DEVICE CONFIGS</label>
             <DeviceConfigPanel configs={deviceConfigs}
                 collections={collections}
-                modifyConfig={modifyConfig}>
+                modifyConfig={modifyConfig}
+                setCurrentCollection={setCurrCollection}>
             </DeviceConfigPanel>
             <label>Image Library</label>
             <div className="flex flex-row flex-wrap pt-5">{
