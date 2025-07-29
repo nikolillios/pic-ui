@@ -145,6 +145,7 @@ const Home = () => {
             const newConfigs = {...deviceConfigs}
             newConfigs[res.data["id"]] = res.data
             setDeviceConfigs(newConfigs)
+            setCurrCollection(res.data["collection"])
         }).catch((e) => {
             console.log("Error: %s", e)
         })
