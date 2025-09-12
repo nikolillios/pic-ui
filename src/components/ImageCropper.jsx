@@ -20,7 +20,9 @@ const ImageCropper = ({ closeModal, uploadImageUrl, cropDims }) => {
   const [aspectRatio, setAspectRatio] = useState();
 
   useEffect(() => {
-    setAspectRatio(cropDims[0]/cropDims[1])
+    if (cropDims && cropDims.length >= 2) {
+      setAspectRatio(cropDims[0]/cropDims[1])
+    }
   }, [cropDims])
 
   const onSelectFile = (e) => {
@@ -45,16 +47,13 @@ const ImageCropper = ({ closeModal, uploadImageUrl, cropDims }) => {
   const onUploadCrop = () => {
     const dataUrl = previewCanvasRef.current.toDataURL();
     uploadImageUrl(dataUrl);
-    console.log("called uploadImageUrl")
     closeModal();
   }
 
   const onImageLoad = (e) => {
     const { naturalWidth, naturalHeight, width, height } = e.currentTarget;
-    const cropWidthInPercent = (cropDims[0] / naturalWidth) * 100;
-    console.log("cro pwidths")
-    console.log(naturalWidth)
-    console.log(width)
+    const targetWidth = cropDims[0];
+    const cropWidthInPercent = (targetWidth / naturalWidth) * 100;
 
     const crop = makeAspectCrop(
       {
@@ -107,7 +106,9 @@ const ImageCropper = ({ closeModal, uploadImageUrl, cropDims }) => {
                   crop,
                   imgRef.current.width,
                   imgRef.current.height
-                )
+                ),
+                cropDims[0], // Target width
+                cropDims[1]  // Target height
               );
               setCropSelected(true);
             }}
