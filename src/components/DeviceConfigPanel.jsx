@@ -9,21 +9,30 @@ const DeviceConfigPanel = ({configs, collections, modifyConfig, setCurrentCollec
     const [error, setError] = useState("")
 
     const onCollectionChanged = (e) => {
-        setNewCollection(e.target.value)
-        setCurrentCollection(e.target.value)
+        const selectedCollectionId = e.target.value;
+        setNewCollection(selectedCollectionId)
+        setCurrentCollection(selectedCollectionId)
+        
+        // Clear any previous error when collection changes
+        setError("")
+        
+        // Real-time validation for compatibility
+        if (editConfig && collections && selectedCollectionId) {
+            const editCollection = configs[editConfig].collection;
+            if (editCollection == selectedCollectionId) {
+                setError("Same collection");
+            } else if (collections[editCollection].device_model !== collections[selectedCollectionId].device_model) {
+                setError("Incompatible models");
+            }
+        }
     }
     
     const onEditSubmitted = () => {
         if (!collections || !newCollection || !(newCollection in collections)) return;
-        const editCollection = configs[editConfig].collection
-        if (editCollection == newCollection) {
-            setError("Same collection")
-            return
-        }
-        if (collections[editCollection].device_model !== collections[newCollection].device_model) {
-            setError("Incompatible models")
-            return
-        }
+        
+        // Don't submit if there's an error
+        if (error) return;
+        
         console.log(`SETTING CONFIG ${configs[editConfig].name} to ${newCollection}`)
         setError("")
         modifyConfig(newCollection, editConfig)
@@ -34,6 +43,7 @@ const DeviceConfigPanel = ({configs, collections, modifyConfig, setCurrentCollec
         if (!configs) return;
         setEditConfig(id)
         setNewCollection(configs[id].collection)
+        setError("") // Clear any previous error when starting to edit
     }
 
     return (
@@ -53,7 +63,13 @@ const DeviceConfigPanel = ({configs, collections, modifyConfig, setCurrentCollec
                                     <option key={i} value={id}>{collections[id].name}</option>
                             )}</select>
                             {error && <p className="text-red-400 text-xs">{error}</p>}
-                            <button className='w-14 m-2 text-xs' onClick={onEditSubmitted}>Save</button>
+                            <button 
+                                className={`w-14 m-2 text-xs ${error ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                onClick={onEditSubmitted}
+                                disabled={!!error}
+                            >
+                                Save
+                            </button>
                         </div>
                         : <>
                             {collections && <label>{collections[configs[id].collection].name}</label>}
