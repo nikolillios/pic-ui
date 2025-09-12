@@ -5,12 +5,13 @@ import Login from "./components/Login";
 import Logout from './components/Logout';
 import Home from "./components/Home";
 import Navigation from './components/navigation';
+import HomeRefactored from './components/HomeRefactored';
 
 function App() {
     return  <BrowserRouter>
         <Navigation></Navigation>
         <Routes>
-            <Route path="/" element={<Home/>}/>
+            <Route path="/" element={<HomeRefactored/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/logout" element={<Logout/>}/>
         </Routes>
