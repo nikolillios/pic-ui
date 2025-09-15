@@ -16,15 +16,16 @@ export function Navigation() {
     <Navbar className="flex flex-row" bg="dark" variant="dark">
           <Navbar.Brand className="pr-10" href="/">Picturesque</Navbar.Brand>
           <Nav className="me-auto">
-          {isAuth ?
-            <Nav.Link href="/">Home</Nav.Link> :
-            <Nav.Link href="/login">Login</Nav.Link>}
+          {isAuth && (
+            <Nav.Link href="/">Home</Nav.Link>
+          )}
           </Nav>
           <Nav>
-          {isAuth ?
-            <Nav.Link href="/logout">Logout</Nav.Link>:
+          {isAuth ? (
+            <Nav.Link href="/logout">Logout</Nav.Link>
+          ) : (
             <Nav.Link href="/login">Login</Nav.Link>
-          }
+          )}
           </Nav>
       </Navbar>
       </div>

@@ -29,32 +29,34 @@ function Login() {
         window.location.href = '/'
     }
     return (
-        <div>
-            <h1>Hello world</h1>
-            <form onSubmit={submit}>
-                <label>
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="Username"
-                        value={username}
-                        required
-                        onChange={e => setUsername(e.target.value)}
-                    />
-                </label>
-                <label>
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        value={password}
-                        required
-                        onChange={e => setPassword(e.target.value)}
-                    />
-                </label>
-                <button type="submit">Log In</button>
-            </form>
-        </div>
+        <>
+            <h2 className='m-5 text-4xl'>Sign in</h2>
+            <div className='flex items-center justify-center'>
+                <form className="p-8 border-4 border-purple-400 rounded bg-black" onSubmit={submit}>
+                    <div>
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Username"
+                            value={username}
+                            required
+                            onChange={e => setUsername(e.target.value)}
+                        />
+                    </div>
+                    <div className="m-1">
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            value={password}
+                            required
+                            onChange={e => setPassword(e.target.value)}
+                        />
+                    </div>
+                    <button className="w-20 h-10 p-0 m-2" type="submit">Sign In</button>
+                </form>
+            </div>
+        </>
     )
 }
 
