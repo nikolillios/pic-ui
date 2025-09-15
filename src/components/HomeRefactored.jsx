@@ -37,7 +37,6 @@ const HomeRefactored = () => {
     // Local component state
     const [modalOpen, setModalOpen] = useState(false);
     const [currCollection, setCurrCollection] = useState(0);
-    const [cropDims, setCropDims] = useState();
     const [selectedImage, setSelectedImage] = useState();
     const [createOpen, setCreateOpen] = useState(false);
     const [tempImgSrc, setTempImgSrc] = useState("");
@@ -58,7 +57,6 @@ const HomeRefactored = () => {
         try {
             const newCollection = await createCollection(name, device);
             setCurrCollection(newCollection.id);
-            setCropDims(MODEL_TO_ASPECT[newCollection.device_model]);
         } catch (error) {
             // Error is already handled in the hook
             console.log("Failed to create collection");
@@ -103,11 +101,6 @@ const HomeRefactored = () => {
 
     const selectCollection = (id) => {
         setCurrCollection(id);
-        if (collections && collections[id] && collections[id].device_model) {
-            setCropDims(MODEL_TO_ASPECT[collections[id].device_model]);
-        } else {
-            console.warn('Collection not found or missing device_model:', id, collections);
-        }
     };
 
     const collectionSelected = (e) => {
@@ -161,7 +154,7 @@ const HomeRefactored = () => {
                 )}
                 
                 <div className="flex justify-start mt-5">
-                    {currCollection && cropDims ? (
+                    {currCollection ? (
                         <button
                             className="w-25 text-xs"
                             title="Add photo"
@@ -199,7 +192,7 @@ const HomeRefactored = () => {
                     {modalOpen && (
                         <Modal 
                             callback={handleUploadImage}
-                            cropDims={cropDims}
+                            cropDims={MODEL_TO_ASPECT[collections[currCollection].device_model]}
                             closeModal={() => setModalOpen(false)}
                         />
                     )}
