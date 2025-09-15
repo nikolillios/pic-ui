@@ -56,7 +56,7 @@ const HomeRefactored = () => {
             fetchCollections();
             getDeviceConfigs();
         }
-    }, [fetchImages, fetchCollections, getDeviceConfigs]);
+    }, []);
 
     // Handle collection creation
     const handleCreateCollection = async (name, device) => {
@@ -166,20 +166,14 @@ const HomeRefactored = () => {
                 )}
                 
                 <div className="flex justify-start mt-5">
-                    {currCollection && cropDims ? 
+                    {currCollection && cropDims ? (
                         <button
                             className="w-25 text-xs"
                             title="Add photo"
                             onClick={() => setModalOpen(true)}>
                             Upload New Image
-                        </button> : 
-                        currCollection ? 
-                            <button
-                                className="w-25 text-xs opacity-50 cursor-not-allowed"
-                                title="Please select a collection first"
-                                disabled>
-                                Upload New Image
-                            </button> : <></>}
+                        </button>
+                    ) : <></>}
                 </div>
                 
                 <div className="flex flex-row flex-wrap pt-5">
