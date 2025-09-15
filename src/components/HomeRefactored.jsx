@@ -2,15 +2,10 @@ import { useEffect, useState } from "react";
 import { useCollections } from "../hooks/useCollections";
 import { useImages } from "../hooks/useImages";
 import { useDeviceConfigs } from "../hooks/useDeviceConfigs";
+import { MODEL_TO_ASPECT } from "../config/api";
 import Modal from "./Modal";
 import CreateCollection from "./CreateCollection";
 import DeviceConfigPanel from "./DeviceConfigPanel";
-
-export const MODEL_TO_ASPECT = {
-    1: [600, 400],
-    2: [800, 480],
-    3: [1600, 1200],
-}
 
 const HomeRefactored = () => {
     // Use custom hooks

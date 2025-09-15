@@ -1,6 +1,13 @@
 // API Configuration
 // This file centralizes all API-related configuration
 
+// Device model to aspect ratio mapping
+export const MODEL_TO_ASPECT = {
+    1: [600, 400],
+    2: [800, 480],
+    3: [1600, 1200],
+};
+
 const API_CONFIG = {
     // Get API URL from environment variable, fallback to localhost for development
     BASE_URL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/',

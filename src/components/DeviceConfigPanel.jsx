@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {MODEL_TO_ASPECT} from "./Home";
+import { MODEL_TO_ASPECT } from "../config/api";
 import editIcon from "../assets/white_pencil.png";
 
 const DeviceConfigPanel = ({configs, collections, modifyConfig, setCurrentCollection}) => {
