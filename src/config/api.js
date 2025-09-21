@@ -18,6 +18,10 @@ const API_CONFIG = {
     
     // API Endpoints
     ENDPOINTS: {
+        AUTH: {
+            LOGIN: 'token/',
+            LOGOUT: 'logout/',
+        },
         IMAGES: {
             GET_BY_USER: 'images/getImagesByUser',
             GET_COLLECTIONS: 'images/getCollections',

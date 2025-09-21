@@ -1,8 +1,7 @@
 import { jwtDecode }  from 'jwt-decode'
 import { useState } from "react";
-import axios from "axios";
-
-const API_URL = 'http://127.0.0.1:8000/token/'
+import apiClient from "../services/apiClient";
+import { getApiEndpoint } from "../config/api";
 
 function Login() {
     const [username, setUsername] = useState("");
@@ -14,18 +13,15 @@ function Login() {
             username: username,
             password: password
         };
-        const {data} = await axios.post(
-            API_URL,
-            loginCredentials, 
-            {headers: {
-                'Content-Type': 'application/json'
-            }}, {withCredentials: true});
+        const {data} = await apiClient.post(
+            getApiEndpoint('AUTH', 'LOGIN'),
+            loginCredentials);
         localStorage.clear();
         localStorage.setItem('access_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
         const tokenObj = jwtDecode(data.access)
         localStorage.setItem('uid', tokenObj['user_id'])
-        axios.defaults.headers.common['Authorization'] = `Bearer ${data['access']}`;
+        apiClient.defaults.headers.common['Authorization'] = `Bearer ${data['access']}`;
         window.location.href = '/'
     }
     return (
