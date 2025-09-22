@@ -164,21 +164,21 @@ const HomeRefactored = () => {
                     ) : <></>}
                 </div>
                 
-                <div className="flex flex-row flex-wrap pt-5">
+                <div className="flex flex-row flex-wrap pt-5 gap-4">
                     {currCollection ? collections[currCollection].images.map(id => 
                         <div key={id} onClick={() => onSelectImage(id)}>
                             <img 
                                 width="200" 
                                 src={images[id]}
                                 alt={`Collection image ${id}`}
-                                className={id === selectedImage ? 
+                                className={`rounded-lg ${id === selectedImage ? 
                                     "border-sky-500 border-2 border-solid"
-                                    : ""}
+                                    : ""}`}
                             />
                         </div>
                     ) : <></>}
                     <div className="opacity-20">
-                        {tempImgSrc && <img width="200" src={tempImgSrc} alt="Uploading..." />}
+                        {tempImgSrc && <img width="200" src={tempImgSrc} alt="Uploading..." className="rounded-lg" />}
                     </div>
                 </div>
                 
@@ -211,10 +211,10 @@ const HomeRefactored = () => {
             
             <label>Image Library</label>
             <div className="card">
-                <div className="flex flex-row flex-wrap pt-5">
+                <div className="flex flex-row flex-wrap pt-5 gap-4">
                     {images ? Object.keys(images).map(id => 
                         <div key={id}>
-                            <img width="200" src={images[id]} alt={`Image ${id}`} />
+                            <img width="200" src={images[id]} alt={`Image ${id}`} className="rounded-lg" />
                         </div>
                     ) : <></>}
                 </div>
