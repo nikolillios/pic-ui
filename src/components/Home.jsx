@@ -127,96 +127,151 @@ const Home = () => {
     }
 
     return (
-        <div>
-            <h2 className="text-lg">Image Collections</h2>
-            <div className="card flex flex-col mt-20">
-                <div className="flex flex-row h-30">
-                    {collections ? (
-                        <select className="w-40 h-8" value={currCollection} onChange={collectionSelected}>
-                            <option disabled={true} value={0}>Select a Collection</option>
-                            {Object.keys(collections).map((id) => 
-                                <option key={id} value={id}>{collections[id].name}</option>
-                            )}
-                        </select>
-                    ) : <></>}
-                    <button 
-                        className="ml-2 p-2 w-13 h-10" 
-                        onClick={() => setCreateOpen(!createOpen)}
-                    >
-                        {!createOpen ? "Create New" : "Close"}
-                    </button>
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+            <div className="max-w-7xl mx-auto">
+                <div className="text-center mb-8">
+                    <h1 className="text-4xl font-bold text-white mb-2">Picturesque</h1>
+                    <p className="text-gray-300">Manage your digital photo collections</p>
                 </div>
                 
-                {createOpen && (
-                    <div className="flex justify-start">
-                        <CreateCollection createCollection={handleCreateCollection}/>
-                    </div>
-                )}
-                
-                <div className="flex justify-start mt-5">
-                    {currCollection ? (
-                        <button
-                            className="w-25 text-xs"
-                            title="Add photo"
-                            onClick={() => setModalOpen(true)}>
-                            Upload New Image
+                <div className="bg-black border border-gray-700 rounded-lg shadow-xl p-8 mb-8">
+                    <h2 className="text-2xl font-semibold text-white mb-6">Image Collections</h2>
+                    <div className="flex flex-row items-center gap-4 mb-6">
+                        {collections ? (
+                            <select 
+                                className="px-4 py-3 bg-gray-800 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors" 
+                                value={currCollection} 
+                                onChange={collectionSelected}
+                            >
+                                <option disabled={true} value={0}>Select a Collection</option>
+                                {Object.keys(collections).map((id) => 
+                                    <option key={id} value={id}>{collections[id].name}</option>
+                                )}
+                            </select>
+                        ) : <></>}
+                        <button 
+                            className={`px-6 py-3 rounded-md font-medium transition-colors ${
+                                !createOpen 
+                                    ? "bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                    : "bg-gray-600 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            }`}
+                            onClick={() => setCreateOpen(!createOpen)}
+                        >
+                            {!createOpen ? "Create New" : "Close"}
                         </button>
-                    ) : <></>}
-                </div>
-                
-                <div className="flex flex-row flex-wrap pt-5 gap-4">
-                    {currCollection ? collections[currCollection].images.map(id => 
-                        <div key={id} onClick={() => onSelectImage(id)}>
-                            <img 
-                                width="200" 
-                                src={images[id]}
-                                alt={`Collection image ${id}`}
-                                className={`rounded-lg ${id === selectedImage ? 
-                                    "border-sky-500 border-2 border-solid"
-                                    : ""}`}
-                            />
+                    </div>
+                    
+                    {createOpen && (
+                        <div className="mb-6">
+                            <CreateCollection createCollection={handleCreateCollection}/>
+                        </div>
+                    )}
+                    
+                    {currCollection ? (
+                        <div className="mb-6">
+                            <button
+                                className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors font-medium"
+                                onClick={() => setModalOpen(true)}>
+                                Upload New Image
+                            </button>
+                        </div>
+                    ): <></>}
+                    
+                    {currCollection ? (
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {currCollection && collections[currCollection].images.map(id => 
+                                <div 
+                                    key={id} 
+                                    onClick={() => onSelectImage(id)}
+                                    className={`relative cursor-pointer rounded-lg overflow-hidden transition-all ${
+                                        id === selectedImage 
+                                            ? "ring-4 ring-blue-500 shadow-lg transform scale-105" 
+                                            : "hover:shadow-lg hover:transform hover:scale-102"
+                                    }`}
+                                >
+                                    <img 
+                                        src={images[id]}
+                                        alt={`Collection image ${id}`}
+                                        className="w-full h-48 object-cover"
+                                    />
+                                    {id === selectedImage && (
+                                        <div className="absolute inset-0 bg-blue-500 bg-opacity-20 flex items-center justify-center">
+                                            <div className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                                Selected
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     ) : <></>}
-                    <div className="opacity-20">
-                        {tempImgSrc && <img width="200" src={tempImgSrc} alt="Uploading..." className="rounded-lg" />}
-                    </div>
-                </div>
-                
-                <div className="flex flex-row space-x-4 justify-end">
-                    <div className="relative pt-10">
-                        {selectedImage ? 
-                            <button className="bg-red-500" onClick={handleDeleteImage}>
-                                Delete Image
-                            </button> : <></>}
-                    </div>
-                    {modalOpen && (
-                        <Modal 
-                            callback={handleUploadImage}
-                            cropDims={MODEL_TO_ASPECT[collections[currCollection].device_model]}
-                            closeModal={() => setModalOpen(false)}
-                        />
+                    
+                    {currCollection && collections[currCollection].images.length === 0 ? (
+                        <div className="text-center py-12 text-gray-400">
+                            <div className="text-6xl mb-4">📷</div>
+                            <p className="text-lg mb-2">No images in this collection yet</p>
+                            <p className="text-sm">Upload your first image to get started</p>
+                        </div>
+                    ): <></>}
+                    
+                    {tempImgSrc && (
+                        <div className="mt-6 opacity-50">
+                            <img src={tempImgSrc} alt="Uploading..." className="w-48 h-32 object-cover rounded-lg" />
+                            <p className="text-sm text-gray-400 mt-2">Uploading...</p>
+                        </div>
+                    )}
+                    
+                    {selectedImage && (
+                        <div className="mt-6 flex justify-end">
+                            <button
+                                className="px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors font-medium"
+                                onClick={handleDeleteImage}
+                            >
+                                Delete Selected Image
+                            </button>
+                        </div>
                     )}
                 </div>
-            </div>
-            
-            <label className='mb-5'>Device Configurations</label>
-            <div className="card">
-                <DeviceConfigPanel 
-                    configs={deviceConfigs}
-                    collections={collections}
-                    modifyConfig={handleModifyConfig}
-                    setCurrentCollection={setCurrCollection}
-                />
-            </div>
-            
-            <label>Image Library</label>
-            <div className="card">
-                <div className="flex flex-row flex-wrap pt-5 gap-4">
-                    {images ? Object.keys(images).map(id => 
-                        <div key={id}>
-                            <img width="200" src={images[id]} alt={`Image ${id}`} className="rounded-lg" />
+                
+                {modalOpen && (
+                    <Modal 
+                        callback={handleUploadImage}
+                        cropDims={MODEL_TO_ASPECT[collections[currCollection].device_model]}
+                        closeModal={() => setModalOpen(false)}
+                    />
+                )}
+                
+                <div className="bg-black border border-gray-700 rounded-lg shadow-xl p-8 mb-8">
+                    <h2 className="text-2xl font-semibold text-white mb-6">Device Configurations</h2>
+                    <DeviceConfigPanel 
+                        configs={deviceConfigs}
+                        collections={collections}
+                        modifyConfig={handleModifyConfig}
+                        setCurrentCollection={setCurrCollection}
+                    />
+                </div>
+                
+                <div className="bg-black border border-gray-700 rounded-lg shadow-xl p-8">
+                    <h2 className="text-2xl font-semibold text-white mb-6">Image Library</h2>
+                    {images && Object.keys(images).length > 0 ? (
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {Object.keys(images).map(id => 
+                                <div key={id} className="rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                                    <img 
+                                        src={images[id]} 
+                                        alt={`Image ${id}`} 
+                                        className="w-full h-48 object-cover"
+                                    />
+                                </div>
+                            )}
                         </div>
-                    ) : <></>}
+                    ) : (
+                        <div className="text-center py-12 text-gray-400">
+                            <div className="text-6xl mb-4">🖼️</div>
+                            <p className="text-lg mb-2">No images in your library yet</p>
+                            <p className="text-sm">Create a collection and upload images to get started</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
