@@ -49,22 +49,28 @@ const DeviceConfigPanel = ({configs, collections, modifyConfig, setCurrentCollec
     return (
         <div className='flex flex-col'>
             {configs ? Object.keys(configs).map((id, i) => 
-                <div className="border-grey-500 border-1 border rounded-md flex flex-col p-5 text-left" key={i}>
+                <div className="bg-gray-800 border-gray-600 border rounded-md flex flex-col p-5 text-left" key={i}>
                     <div>
-                        <label className='font-bold'>Device: </label>
-                        <span>{configs[id].name}</span>
+                        <label className='font-bold text-gray-300'>Device: </label>
+                        <span className="text-white">{configs[id].name}</span>
                     </div>
                     <div>
-                        <label className='font-bold'>Collection: </label>
+                        <label className='font-bold text-gray-300'>Collection: </label>
                         {editConfig && collections ?
                         <div className='inline-block'>
-                            <select value={newCollection} onChange={onCollectionChanged}>{Object.keys(collections).map(
-                                (id, i) => 
-                                    <option key={i} value={id}>{collections[id].name}</option>
-                            )}</select>
+                            <select 
+                                value={newCollection} 
+                                onChange={onCollectionChanged}
+                                className="bg-gray-700 border border-gray-600 text-white rounded px-2 py-1"
+                            >
+                                {Object.keys(collections).map(
+                                    (id, i) => 
+                                        <option key={i} value={id}>{collections[id].name}</option>
+                                )}
+                            </select>
                             {error && <p className="text-red-400 text-xs">{error}</p>}
                             <button 
-                                className={`w-14 m-2 text-xs ${error ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                className={`w-14 m-2 text-xs bg-green-600 text-white rounded px-2 py-1 ${error ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700'}`}
                                 onClick={onEditSubmitted}
                                 disabled={!!error}
                             >
@@ -72,15 +78,15 @@ const DeviceConfigPanel = ({configs, collections, modifyConfig, setCurrentCollec
                             </button>
                         </div>
                         : <>
-                            {collections && <label>{collections[configs[id].collection].name}</label>}
-                            <button className='p-1 ml-2' onClick={() => editClicked(id)}>
+                            {collections && <label className="text-white">{collections[configs[id].collection].name}</label>}
+                            <button className='p-1 ml-2 bg-gray-700 hover:bg-gray-600 rounded' onClick={() => editClicked(id)}>
                                 <img className="w-4 inline-block" src={editIcon} alt="edit"></img>
                             </button>
                         </>}
                     </div>
                     <div>
-                        <label className='font-bold'>Dimensions: </label>
-                        <span>{MODEL_TO_ASPECT[configs[id].device_model].join("x")}</span>
+                        <label className='font-bold text-gray-300'>Dimensions: </label>
+                        <span className="text-blue-400">{MODEL_TO_ASPECT[configs[id].device_model].join("x")}</span>
                     </div>
                 </div>
             ): <></>}
