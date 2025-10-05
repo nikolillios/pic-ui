@@ -21,6 +21,8 @@ const API_CONFIG = {
         AUTH: {
             LOGIN: 'token/',
             LOGOUT: 'logout/',
+            PAIR_PI: 'pi/pair/',
+            UNPAIR_PI: 'pi/unpair/',
         },
         IMAGES: {
             GET_BY_USER: 'images/getImagesByUser',

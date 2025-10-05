@@ -6,6 +6,7 @@ import { MODEL_TO_ASPECT } from "../config/api";
 import Modal from "./Modal";
 import CreateCollection from "./CreateCollection";
 import DeviceConfigPanel from "./DeviceConfigPanel";
+import PairDevice from "./PairDevice";
 
 const Home = () => {
     // Use custom hooks
@@ -40,6 +41,7 @@ const Home = () => {
     const [selectedImage, setSelectedImage] = useState();
     const [createOpen, setCreateOpen] = useState(false);
     const [tempImgSrc, setTempImgSrc] = useState("");
+    const [pairDeviceOpen, setPairDeviceOpen] = useState(false);
 
     // Load data on mount
     useEffect(() => {
@@ -97,6 +99,12 @@ const Home = () => {
             // Error is already handled in the hook
             console.log("Failed to update display");
         }
+    };
+
+    // Handle successful device pairing
+    const handlePairSuccess = () => {
+        setPairDeviceOpen(false);
+        getDisplays(); // Refresh the displays list
     };
 
     const selectCollection = (id) => {
@@ -242,13 +250,41 @@ const Home = () => {
                 )}
                 
                 <div className="bg-black border border-gray-700 rounded-lg shadow-xl p-8 mb-8">
-                    <h2 className="text-2xl font-semibold text-white mb-6">Device Configurations</h2>
-                    <DeviceConfigPanel 
-                        displays={displays}
-                        collections={collections}
-                        updateDisplay={handleUpdateDisplay}
-                        setCurrentCollection={setCurrCollection}
-                    />
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl font-semibold text-white">Device Configurations</h2>
+                        <button
+                            onClick={() => setPairDeviceOpen(!pairDeviceOpen)}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors font-medium text-sm"
+                        >
+                            {pairDeviceOpen ? 'Cancel' : '+ Pair New Device'}
+                        </button>
+                    </div>
+                    
+                    {pairDeviceOpen && (
+                        <div className="mb-6">
+                            <PairDevice 
+                                onSuccess={handlePairSuccess}
+                                onCancel={() => setPairDeviceOpen(false)}
+                            />
+                        </div>
+                    )}
+                    
+                    {displays && Object.keys(displays).length > 0 ? (
+                        <DeviceConfigPanel 
+                            displays={displays}
+                            collections={collections}
+                            updateDisplay={handleUpdateDisplay}
+                            setCurrentCollection={setCurrCollection}
+                        />
+                    ) : (
+                        !pairDeviceOpen && (
+                            <div className="text-center py-12 text-gray-400">
+                                <div className="text-6xl mb-4">📱</div>
+                                <p className="text-lg mb-2">No devices paired yet</p>
+                                <p className="text-sm">Click "Pair New Device" to connect your first Raspberry Pi display</p>
+                            </div>
+                        )
+                    )}
                 </div>
                 
                 <div className="bg-black border border-gray-700 rounded-lg shadow-xl p-8">
