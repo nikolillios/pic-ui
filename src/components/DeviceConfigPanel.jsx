@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { MODEL_TO_ASPECT } from "../config/api";
 import editIcon from "../assets/white_pencil.png";
 
-const DeviceConfigPanel = ({configs, collections, modifyConfig, setCurrentCollection}) => {
+const DeviceConfigPanel = ({displays, collections, updateDisplay, setCurrentCollection}) => {
 
-    const [editConfig, setEditConfig] = useState()
+    const [editDisplay, setEditDisplay] = useState()
     const [newCollection, setNewCollection] = useState()
     const [error, setError] = useState("")
 
@@ -17,11 +17,12 @@ const DeviceConfigPanel = ({configs, collections, modifyConfig, setCurrentCollec
         setError("")
         
         // Real-time validation for compatibility
-        if (editConfig && collections && selectedCollectionId) {
-            const editCollection = configs[editConfig].collection;
-            if (editCollection == selectedCollectionId) {
+        if (editDisplay && collections && selectedCollectionId) {
+            const currentCollection = displays[editDisplay].collection;
+            if (currentCollection == selectedCollectionId) {
                 setError("Same collection");
-            } else if (collections[editCollection].device_model !== collections[selectedCollectionId].device_model) {
+            } else if (collections[currentCollection] && collections[selectedCollectionId] && 
+                      collections[currentCollection].device_model !== collections[selectedCollectionId].device_model) {
                 setError("Incompatible models");
             }
         }
@@ -33,30 +34,30 @@ const DeviceConfigPanel = ({configs, collections, modifyConfig, setCurrentCollec
         // Don't submit if there's an error
         if (error) return;
         
-        console.log(`SETTING CONFIG ${configs[editConfig].name} to ${newCollection}`)
+        console.log(`SETTING DISPLAY ${displays[editDisplay].display_name} to ${newCollection}`)
         setError("")
-        modifyConfig(newCollection, editConfig)
-        setEditConfig(undefined)
+        updateDisplay(editDisplay, newCollection, null)
+        setEditDisplay(undefined)
     }
 
-    const editClicked = (id) => {
-        if (!configs) return;
-        setEditConfig(id)
-        setNewCollection(configs[id].collection)
+    const editClicked = (serialId) => {
+        if (!displays) return;
+        setEditDisplay(serialId)
+        setNewCollection(displays[serialId].collection)
         setError("") // Clear any previous error when starting to edit
     }
 
     return (
         <div className='flex flex-col'>
-            {configs ? Object.keys(configs).map((id, i) => 
+            {displays ? Object.keys(displays).map((serialId, i) => 
                 <div className="bg-gray-800 border-gray-600 border rounded-md flex flex-col p-5 text-left" key={i}>
                     <div>
                         <label className='font-bold text-gray-300'>Device: </label>
-                        <span className="text-white">{configs[id].name}</span>
+                        <span className="text-white">{displays[serialId].display_name}</span>
                     </div>
                     <div>
                         <label className='font-bold text-gray-300'>Collection: </label>
-                        {editConfig && collections ?
+                        {editDisplay === serialId && collections ?
                         <div className='inline-block'>
                             <select 
                                 value={newCollection} 
@@ -78,15 +79,19 @@ const DeviceConfigPanel = ({configs, collections, modifyConfig, setCurrentCollec
                             </button>
                         </div>
                         : <>
-                            {collections && <label className="text-white">{collections[configs[id].collection].name}</label>}
-                            <button className='p-1 ml-2 bg-gray-700 hover:bg-gray-600 rounded' onClick={() => editClicked(id)}>
+                            {collections && displays[serialId].collection ? (
+                                <label className="text-white">{collections[displays[serialId].collection].name}</label>
+                            ) : (
+                                <label className="text-gray-400 italic">No collection assigned</label>
+                            )}
+                            <button className='p-1 ml-2 bg-gray-700 hover:bg-gray-600 rounded' onClick={() => editClicked(serialId)}>
                                 <img className="w-4 inline-block" src={editIcon} alt="edit"></img>
                             </button>
                         </>}
                     </div>
                     <div>
                         <label className='font-bold text-gray-300'>Dimensions: </label>
-                        <span className="text-blue-400">{MODEL_TO_ASPECT[configs[id].device_model].join("x")}</span>
+                        <span className="text-blue-400">{MODEL_TO_ASPECT[displays[serialId].device_model].join("x")}</span>
                     </div>
                 </div>
             ): <></>}

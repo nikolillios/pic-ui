@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useCollections } from "../hooks/useCollections";
 import { useImages } from "../hooks/useImages";
-import { useDeviceConfigs } from "../hooks/useDeviceConfigs";
+import { useDisplays } from "../hooks/useDisplays";
 import { MODEL_TO_ASPECT } from "../config/api";
 import Modal from "./Modal";
 import CreateCollection from "./CreateCollection";
@@ -27,12 +27,12 @@ const Home = () => {
     } = useImages();
 
     const {
-        deviceConfigs,
-        loading: deviceConfigsLoading,
-        error: deviceConfigsError,
-        getDeviceConfigs,
-        modifyConfig
-    } = useDeviceConfigs();
+        displays,
+        loading: displaysLoading,
+        error: displaysError,
+        getDisplays,
+        updateDisplay
+    } = useDisplays();
 
     // Local component state
     const [modalOpen, setModalOpen] = useState(false);
@@ -48,7 +48,7 @@ const Home = () => {
         } else {
             fetchImages();
             fetchCollections();
-            getDeviceConfigs();
+            getDisplays();
         }
     }, []);
 
@@ -86,16 +86,16 @@ const Home = () => {
         }
     };
 
-    // Handle device config modification
-    const handleModifyConfig = async (newCollection, editConfig) => {
+    // Handle display modification
+    const handleUpdateDisplay = async (serialId, newCollection, newDisplayName) => {
         try {
-            const updatedConfig = await modifyConfig(newCollection, editConfig);
-            if (updatedConfig) {
-                setCurrCollection(updatedConfig["collection"]);
+            const updatedDisplay = await updateDisplay(serialId, newCollection, newDisplayName);
+            if (updatedDisplay) {
+                setCurrCollection(updatedDisplay["collection"]);
             }
         } catch (error) {
             // Error is already handled in the hook
-            console.log("Failed to modify device config");
+            console.log("Failed to update display");
         }
     };
 
@@ -117,13 +117,13 @@ const Home = () => {
     };
 
     // Show loading state
-    if (collectionsLoading || imagesLoading || deviceConfigsLoading) {
+    if (collectionsLoading || imagesLoading || displaysLoading) {
         return <div>Loading...</div>;
     }
 
     // Show error state
-    if (collectionsError || imagesError || deviceConfigsError) {
-        return <div>Error: {collectionsError || imagesError || deviceConfigsError}</div>;
+    if (collectionsError || imagesError || displaysError) {
+        return <div>Error: {collectionsError || imagesError || displaysError}</div>;
     }
 
     return (
@@ -244,9 +244,9 @@ const Home = () => {
                 <div className="bg-black border border-gray-700 rounded-lg shadow-xl p-8 mb-8">
                     <h2 className="text-2xl font-semibold text-white mb-6">Device Configurations</h2>
                     <DeviceConfigPanel 
-                        configs={deviceConfigs}
+                        displays={displays}
                         collections={collections}
-                        modifyConfig={handleModifyConfig}
+                        updateDisplay={handleUpdateDisplay}
                         setCurrentCollection={setCurrCollection}
                     />
                 </div>

@@ -28,8 +28,8 @@ const API_CONFIG = {
             UPLOAD_TO_COLLECTION: 'images/uploadImageToCollection/',
             CREATE_COLLECTION: 'images/createCollection',
             DELETE_IMAGE: 'images/deleteImage/',
-            GET_DEVICE_CONFIGS: 'images/getDeviceConfigs',
-            UPDATE_DEVICE_CONFIG: 'images/updateDeviceConfig/',
+            GET_DISPLAYS: 'images/displays/',
+            UPDATE_DISPLAY: 'images/displays/update/',
         }
     },
     
